@@ -45,7 +45,7 @@ setInterval(async () => {
   gamesCurrentUser.set(playing);
   gamesCurrentVisits.set(visits);
   gamesCurrentFavorites.set(favoritedCount);
-  gameRating.set(fixedRatings);
+  gameRating.set(Number(fixedRatings));
 }, 10000);
 
 router.get("/metrics", async (req, res) => {
