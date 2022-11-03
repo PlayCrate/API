@@ -19,22 +19,16 @@ const gamesCurrentFavorites = new prom.Gauge({
   help: "Current Games Favorites",
 });
 
-const gamesCurrentUpVotes = new prom.Gauge({
-  name: "games_current_votes",
-  help: "Current Games votes",
-});
-
-const gamesCurrentDownVotes = new prom.Gauge({
-  name: "games_current_downvotes",
-  help: "Current Games downvotes",
+const gameRating = new prom.Gauge({
+  name: "games_current_rating",
+  help: "Current Games Rating",
 });
 
 for (const metrics of [
   gamesCurrentUser,
   gamesCurrentVisits,
   gamesCurrentFavorites,
-  gamesCurrentUpVotes,
-  gamesCurrentDownVotes,
+  gameRating,
 ]) {
   register.registerMetric(metrics);
 }
@@ -47,12 +41,11 @@ prom.collectDefaultMetrics({ register });
 
 setInterval(async () => {
   const { playing, visits, favoritedCount } = await gameInfo(1730143810);
-  const { upVotes, downVotes } = await gameVotesInfo(1730143810);
+  const { fixedRatings } = await gameVotesInfo(1730143810);
   gamesCurrentUser.set(playing);
   gamesCurrentVisits.set(visits);
   gamesCurrentFavorites.set(favoritedCount);
-  gamesCurrentUpVotes.set(upVotes);
-  gamesCurrentDownVotes.set(downVotes);
+  gameRating.set(fixedRatings);
 }, 10000);
 
 router.get("/metrics", async (req, res) => {
