@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const prom = require("prom-client");
 const register = new prom.Registry();
-const { gameInfo, gameVotesInfo, groupInfo } = require("../../games");
+const { gameInfo, gameVotesInfo, groupInfo } = require("../../utility/games");
 
 const gamesCurrentUser = new prom.Gauge({
   name: "games_current_users",
