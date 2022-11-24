@@ -1,8 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { getTwitter } = require("../../utility/twitter");
+const { twitter } = require("../../../config.json");
 
 router.get("/twitter", async (req, res) => {
+  const { authorization } = req.headers;
+  if (!authorization || authorization !== twitter.API_KEY) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
+
   const queryType = Object.keys(req.query)[0];
   if (queryType !== "username") {
     return res.status(400).json({
