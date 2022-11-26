@@ -2,7 +2,7 @@ const { getUser } = require("./endpoints/users");
 const { getFollows } = require("./endpoints/follow");
 const sql = require("../database/db");
 
-async function getTwitter(username) {
+async function getTwitter(username, robloxID) {
   const data = await getUser(username);
   if (!data) {
     return {
@@ -33,10 +33,10 @@ async function getTwitter(username) {
 
   for (const { username: isPlayCrate } of followings) {
     if (isPlayCrate === "play_crate") {
-      await sql.query(`INSERT INTO users (username, uid) VALUES ($1, $2)`, [
-        data.username,
-        data.id,
-      ]);
+      await sql.query(
+        `INSERT INTO users (username, uid, robloxid) VALUES ($1, $2, $3)`,
+        [data.username, data.id, robloxID]
+      );
 
       return {
         success: true,
