@@ -18,6 +18,8 @@ jobs:
         with:
           node-version: 16.x
       - name: Install dependencies
-        run: yarn
+        run: rm -rf node_modules && yarn install --frozen-lockfile
       - name: Run the app
         run: yarn start
+        with:
+          config-file: config.json

@@ -14,7 +14,8 @@
     "noblox.js": "^4.13.1",
     "node-fetch": "2",
     "pg": "^8.8.0",
-    "prom-client": "^14.1.0"
+    "prom-client": "^14.1.0",
+    "twit": "^2.2.11"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
