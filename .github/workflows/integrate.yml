@@ -17,13 +17,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16.x
-      - name: create-json
-        id: create-json
-        uses: jsdaniell/create-json@v1.2.1
+      - name: Restore dependencies
+        uses: actions/cache@v2
         with:
-          name: "config.json"
-          json: '{"server":{"port": 5700, "type": "dev"}, "twitter":{"bearer_token": "${{ secrets.BEARER_TOKEN }}", "API_KEY": "${{ secrets.API_KEY }}"}, "postgres": {"password": "${{ secrets.POSTGRES }}"}}'
+          path: |
+            ~/.npm
+            **/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
-        run: rm -rf node_modules && yarn install --frozen-lockfile
-      - name: Run the app
-        run: yarn start
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile
