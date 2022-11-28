@@ -38,3 +38,7 @@ jobs:
                   echo "::set-output name=is_release::${IS_RELEASE}"
             - name: Format Style
               run: yarn format
+            - name: Lint Style
+              run: yarn lint
+            - name: Test
+              run: yarn test
