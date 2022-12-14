@@ -1,6 +1,6 @@
-const { getUser } = require('./endpoints/users');
-const { getFollows } = require('./endpoints/follow');
-const sql = require('../database/db');
+const { getUser } = require('./users');
+const { getFollows } = require('./follow');
+const sql = require('../../database/db');
 
 async function getTwitter(username, robloxID, Game, twitter) {
     const data = await getUser(username);

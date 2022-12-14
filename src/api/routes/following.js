@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getTwitter } = require('../../utility/twitter');
+const { getTwitter } = require('../../utility/endpoints/twitter');
 const { twitter } = require('../../../config.json');
 
 router.post('/twitter', async (req, res) => {
