@@ -14,6 +14,7 @@ async function execute() {
             robux_spent INTEGER NOT NULL,
             spent_date TIMESTAMP NOT NULL DEFAULT NOW()
         )`);
+        await sql.query('ALTER TABLE robux ADD COLUMN IF NOT EXISTS purchase_type VARCHAR(255)');
     } catch (err) {
         console.log(err);
     }

@@ -12,15 +12,26 @@ router.post('/robux', async (req, res) => {
         });
     }
 
-    const { robux_spent, robloxid } = req.body;
-    if (!robux_spent || !robloxid) {
+    const { robux_spent, robloxid, purchase_type } = req.body;
+    if (!robux_spent || !robloxid || !purchase_type) {
         return res.json({
             success: false,
             message: 'Missing required fields',
         });
     }
 
-    await sql.query(`INSERT INTO robux (robloxid, robux_spent) VALUES ($1, $2)`, [robloxid, robux_spent]);
+    if (purchase_type !== 'product' && purchase_type !== 'gamepass') {
+        return res.json({
+            success: false,
+            message: 'Invalid purchase type',
+        });
+    }
+
+    await sql.query(`INSERT INTO robux (robloxid, robux_spent, purchase_type) VALUES ($1, $2, $3)`, [
+        robloxid,
+        robux_spent,
+        purchase_type,
+    ]);
     return res.status(200).json({
         success: true,
         message: 'Successfully added robux spent',
