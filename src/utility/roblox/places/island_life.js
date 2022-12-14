@@ -22,13 +22,13 @@ const gameRating = new prom.Gauge({
     help: 'Current Games Rating',
 });
 
-// setInterval(async () => {
-//     const { playing, visits, favoritedCount } = await gameInfo(1730143810);
-//     const { fixedRatings } = await gameVotesInfo(1730143810);
-//     gamesCurrentUser.set(playing);
-//     gamesCurrentVisits.set(visits);
-//     gamesCurrentFavorites.set(favoritedCount);
-//     gameRating.set(Number(fixedRatings));
-// }, server.refresh_time);
+setInterval(async () => {
+    const { playing, visits, favoritedCount } = await gameInfo(1730143810);
+    const { fixedRatings } = await gameVotesInfo(1730143810);
+    gamesCurrentUser.set(playing);
+    gamesCurrentVisits.set(visits);
+    gamesCurrentFavorites.set(favoritedCount);
+    gameRating.set(Number(fixedRatings));
+}, server.refresh_time);
 
 module.exports = { gamesCurrentUser, gamesCurrentVisits, gamesCurrentFavorites, gameRating };
