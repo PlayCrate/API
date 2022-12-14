@@ -6,6 +6,7 @@ const graf = require('./routes/grafana');
 const twitter = require('./routes/following');
 const checkDB = require('./routes/checkDB');
 const dropDB = require('./routes/dropDB');
+const robux = require('./routes/recieveData');
 const { server } = require('../../config.json');
 
 app.use(morgan('dev'));
@@ -15,7 +16,7 @@ app.use(
     }),
     express.json()
 );
-app.use([graf, twitter, checkDB, dropDB]);
+app.use([graf, twitter, checkDB, dropDB, robux]);
 
 app.listen(server.port, () => {
     console.log(`Server is running on port ${server.port}`);
