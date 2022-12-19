@@ -22,6 +22,15 @@ const {
     gameRating: eatingRating,
 } = require('../roblox/places/eating_sim');
 
+const {
+    gamesCurrentUser: bubbleUsers,
+    gamesCurrentVisits: bubbleVisits,
+    gamesCurrentFavorites: bubbleFav,
+    gameRating: bubbleRating,
+    productRobux,
+    gamepassRobux,
+} = require('../roblox/places/bubble');
+
 for (const metrics of [
     gamesCurrentUser,
     gamesCurrentVisits,
@@ -35,6 +44,12 @@ for (const metrics of [
     eatingVisits,
     eatingFav,
     eatingRating,
+    bubbleUsers,
+    bubbleVisits,
+    bubbleFav,
+    bubbleRating,
+    productRobux,
+    gamepassRobux,
 ]) {
     register.registerMetric(metrics);
 }
