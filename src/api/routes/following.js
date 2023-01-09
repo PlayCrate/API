@@ -1,17 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { getTwitter } = require('../../utility/endpoints/twitter');
-const { twitter } = require('../../../config.json');
+const { middleWare } = require('../middleWare');
 
-router.post('/twitter', async (req, res) => {
-    const { authorization } = req.headers;
-    if (!authorization || authorization !== twitter.API_KEY) {
-        return res.status(401).json({
-            success: false,
-            message: 'Unauthorized',
-        });
-    }
-
+router.post('/twitter', middleWare, async (req, res) => {
     const bodyType = Object.keys(req.body)[0];
     if (!bodyType || (bodyType !== 'roblox_id' && bodyType !== 'game')) {
         return res.json({

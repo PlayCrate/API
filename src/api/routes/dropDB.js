@@ -1,16 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const sql = require('../../database/db');
-const { twitter } = require('../../../config.json');
+const { middleWare } = require('../middleWare');
 
-router.delete('/delete/:game/player/:player', async (req, res) => {
-    const { authorization } = req.headers;
-    if (!authorization || authorization !== twitter.API_KEY) {
-        return res.status(401).json({
-            success: false,
-            message: 'Unauthorized',
-        });
-    }
+router.delete('/delete/:game/player/:player', middleWare, async (req, res) => {
     const { game, player } = req.params;
     if (!player || !/^[A-Z_\d]{2,30}$/i.test(player)) {
         return res.json({

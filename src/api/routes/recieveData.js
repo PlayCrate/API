@@ -1,17 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { twitter } = require('../../../config.json');
+const { middleWare } = require('../middleWare');
 const sql = require('../../database/db');
 
-router.post('/robux', async (req, res) => {
-    const { authorization } = req.headers;
-    if (!authorization || authorization !== twitter.API_KEY) {
-        return res.status(401).json({
-            success: false,
-            message: 'Unauthorized',
-        });
-    }
-
+router.post('/robux', middleWare, async (req, res) => {
     const { robux_spent, robloxid, purchase_type } = req.body;
     if (!robux_spent || !robloxid || !purchase_type) {
         return res.json({
