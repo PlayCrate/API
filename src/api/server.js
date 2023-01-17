@@ -8,6 +8,8 @@ const checkDB = require('./routes/checkDB');
 const dropDB = require('./routes/dropDB');
 const robux = require('./routes/recieveData');
 const discord = require('./routes/discord');
+const trade = require('./routes/trade');
+const tradeHistory = require('./routes/getTrades');
 const { server } = require('../../config.json');
 
 app.use(morgan('dev'));
@@ -17,7 +19,7 @@ app.use(
     }),
     express.json()
 );
-app.use([graf, twitter, checkDB, dropDB, robux, discord]);
+app.use([graf, twitter, checkDB, dropDB, robux, discord, trade, tradeHistory]);
 
 app.listen(server.port, () => {
     console.log(`Server is running on port ${server.port}`);

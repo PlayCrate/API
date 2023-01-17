@@ -15,6 +15,14 @@ async function execute() {
             spent_date TIMESTAMP NOT NULL DEFAULT NOW()
         )`);
         await sql.query('ALTER TABLE robux ADD COLUMN IF NOT EXISTS purchase_type VARCHAR(255)');
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS trades(
+            id SERIAL PRIMARY KEY,
+            roblox_id TEXT NOT NULL,
+            recipient_id TEXT NOT NULL,
+            items JSONB NOT NULL,
+            trade_date TIMESTAMP NOT NULL DEFAULT NOW()
+        )`);
     } catch (err) {
         console.log(err);
     }
