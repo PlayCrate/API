@@ -31,6 +31,13 @@ const {
     gamepassRobux,
 } = require('../roblox/places/bubble');
 
+const {
+    PlayCrateGroupCount,
+    MineCartGroupCount,
+    BreadedGroupCount,
+    StormyGroupCount,
+} = require('../roblox/groups/groupInfo');
+
 for (const metrics of [
     gamesCurrentUser,
     gamesCurrentVisits,
@@ -50,6 +57,10 @@ for (const metrics of [
     bubbleRating,
     productRobux,
     gamepassRobux,
+    PlayCrateGroupCount,
+    MineCartGroupCount,
+    BreadedGroupCount,
+    StormyGroupCount,
 ]) {
     register.registerMetric(metrics);
 }
