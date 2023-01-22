@@ -31,6 +31,7 @@ async function getTwitter(username, robloxID, Game, twitter) {
         await sql.query(
             `INSERT INTO users (username, twitter_id, robloxid, game_id, twitter_account) VALUES ('${username}', '${id}', '${robloxID}', '${Game}', '${twitter.toLowerCase()}');`
         );
+        console.log(`Added! ${username} is following, adding to database`);
         return {
             success: true,
             message: `${username} is following, adding to database`,
