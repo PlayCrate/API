@@ -1,8 +1,12 @@
 require('./api/server');
 const sql = require('./database/db');
+const { FetchAllFollowers } = require('./utility/endpoints/fetchFollowers');
 
 async function execute() {
     console.log(`Executing Roblox API...`);
+    setInterval(async () => {
+        await FetchAllFollowers();
+    }, 1000 * 60 * 1);
     try {
         await sql.query(
             `CREATE TABLE IF NOT EXISTS users (id SERIAL PRIMARY KEY, username TEXT NOT NULL, twitter_id TEXT NOT NULL, robloxID TEXT NOT NULL, follow_date TIMESTAMP NOT NULL DEFAULT NOW(), game_id TEXT NOT NULL, twitter_account TEXT NOT NULL)`
@@ -22,6 +26,11 @@ async function execute() {
             recipient_id TEXT NOT NULL,
             items JSONB NOT NULL,
             trade_date TIMESTAMP NOT NULL DEFAULT NOW()
+        )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS twitter_ids (
+            id SERIAL PRIMARY KEY,
+            twitter_id TEXT NOT NULL
         )`);
     } catch (err) {
         console.log(err);
