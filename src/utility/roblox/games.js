@@ -14,7 +14,6 @@ async function makeRequest(url) {
     }).then((res) => res.json());
 
     if (!asd) return;
-    console.log(asd);
     return asd;
 }
 
