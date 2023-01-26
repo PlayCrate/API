@@ -1,18 +1,19 @@
 const fetch = require('node-fetch');
+const randUserAgent = require('rand-user-agent');
+const agent = randUserAgent('desktop');
 
 async function makeRequest(url) {
     const asd = await fetch(url, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'User-Agent': 'Roblox/WinInet',
+            'User-Agent': agent,
             'X-Requested-With': 'XMLHttpRequest',
             'Accept': 'application/json',
         },
     }).then((res) => res.json());
 
     if (!asd) return;
-    console.log(asd);
     return asd;
 }
 
