@@ -34,6 +34,7 @@ exports.gameVotesInfo = async (gameID) => {
 exports.groupInfo = async (groupID) => {
     const groupInfo = await makeRequest(`https://groups.roblox.com/v1/groups/${groupID}`);
     return {
+        name: groupInfo.name,
         memberCount: groupInfo.memberCount,
     };
 };
