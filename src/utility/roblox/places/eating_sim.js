@@ -24,6 +24,7 @@ const gameRating = new prom.Gauge({
 
 setInterval(async () => {
     const { playing, visits, favoritedCount } = await gameInfo(701618141);
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     const { fixedRatings } = await gameVotesInfo(701618141);
     gamesCurrentUser.set(playing);
     gamesCurrentVisits.set(visits);

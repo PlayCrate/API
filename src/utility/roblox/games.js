@@ -1,23 +1,18 @@
-const got = require('got');
+const fetch = require('node-fetch');
 
 async function makeRequest(url) {
-    try {
-        const { body } = await got(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'User-Agent': 'Roblox/WinInet',
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        });
+    const asd = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Roblox/WinInet',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+        },
+    }).then((res) => res.json());
 
-        if (!body) return;
-        const parsed = JSON.parse(body);
-        return parsed;
-    } catch (err) {
-        await new Promise((resolve) => setTimeout(resolve, 5000));
-        return makeRequest(url);
-    }
+    if (!asd) return;
+    return asd;
 }
 
 exports.gameInfo = async (gameID) => {

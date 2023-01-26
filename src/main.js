@@ -32,6 +32,17 @@ async function execute() {
             id SERIAL PRIMARY KEY,
             twitter_id TEXT NOT NULL
         )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS rtc_connection (
+            id SERIAL PRIMARY KEY,
+            play_crate_playing INTEGER NOT NULL,
+            play_crate_visits INTEGER NOT NULL
+        )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS rtc_connection_second (
+            id SERIAL PRIMARY KEY,
+            play_crate_fans INTEGER NOT NULL
+        )`);
     } catch (err) {
         console.log(err);
     }

@@ -45,11 +45,17 @@ async function returnSQL(type) {
 
 setInterval(async () => {
     const { playing, visits, favoritedCount } = await gameInfo(4158951932);
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     const { fixedRatings } = await gameVotesInfo(4158951932);
     gamesCurrentUser.set(playing);
     gamesCurrentVisits.set(visits);
     gamesCurrentFavorites.set(favoritedCount);
     gameRating.set(Number(fixedRatings));
+
+    await sql.query(
+        `INSERT INTO rtc_connection (play_crate_playing, play_crate_visits) SELECT $1, $2 WHERE NOT EXISTS (SELECT * FROM rtc_connection);`,
+        [playing, visits]
+    );
 
     productRobux.set(await returnSQL('product'));
     gamepassRobux.set(await returnSQL('gamepass'));
