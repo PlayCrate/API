@@ -2,6 +2,8 @@ const prom = require('prom-client');
 const { gameInfo, gameVotesInfo } = require('../../roblox/games');
 const { server } = require('../../../../config.json');
 const sql = require('../../../database/db');
+const Redis = require('ioredis');
+const redis = new Redis({});
 
 const gamesCurrentUser = new prom.Gauge({
     name: 'bubble_games_current_users',
@@ -52,10 +54,8 @@ setInterval(async () => {
     gamesCurrentFavorites.set(favoritedCount);
     gameRating.set(Number(fixedRatings));
 
-    await sql.query(
-        `INSERT INTO rtc_connection (play_crate_playing, play_crate_visits) SELECT $1, $2 WHERE NOT EXISTS (SELECT * FROM rtc_connection);`,
-        [playing, visits]
-    );
+    await redis.set('play_crate_playing', playing);
+    await redis.set('play_crate_visits', visits);
 
     productRobux.set(await returnSQL('product'));
     gamepassRobux.set(await returnSQL('gamepass'));

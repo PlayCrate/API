@@ -2,6 +2,8 @@ const prom = require('prom-client');
 const { groupInfo } = require('../games');
 const { server } = require('../../../../config.json');
 const sql = require('../../../database/db');
+const Redis = require('ioredis');
+const redis = new Redis({});
 
 const PlayCrateGroupCount = new prom.Gauge({
     name: 'playcrate_group_count',
@@ -29,10 +31,7 @@ setInterval(async () => {
     await new Promise((resolve) => setTimeout(resolve, 10000));
     console.log(PlayCrate.memberCount);
 
-    await sql.query(
-        `INSERT INTO rtc_connection_second (play_crate_fans) SELECT $1 WHERE NOT EXISTS (SELECT * FROM rtc_connection_second);`,
-        [PlayCrate.memberCount]
-    );
+    await redis.set('play_crate_group_count', PlayCrate.memberCount);
 
     const MineCart = await groupInfo(5799338);
     MineCartGroupCount.set(MineCart.memberCount);

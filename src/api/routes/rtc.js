@@ -1,15 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const sql = require('../../database/db');
+const Redis = require('ioredis');
+const redis = new Redis({});
 
 router.get('/rtc', async (req, res) => {
-    const xd = await sql.query(`SELECT * FROM rtc_connection_second`);
-    const xd2 = await sql.query(`SELECT * FROM rtc_connection`);
+    const playing = await redis.get('play_crate_playing');
+    const visits = await redis.get('play_crate_visits');
+    const fans = await redis.get('play_crate_group_count');
 
     return res.json({
-        play_crate_fans: xd.rows[0].play_crate_fans,
-        play_crate_playing: xd2.rows[0].play_crate_playing,
-        play_crate_visits: xd2.rows[0].play_crate_visits,
+        play_crate_fans: fans,
+        play_crate_playing: playing,
+        play_crate_visits: visits,
     });
 });
 
