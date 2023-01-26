@@ -15,13 +15,19 @@ async function makeRequest(url) {
     return parsed;
 }
 
+function Sleep() {
+    return new Promise((resolve) => setTimeout(resolve, 1000));
+}
+
 exports.gameInfo = async (gameID) => {
+    await Sleep();
     const gameInfo = await makeRequest(`https://games.roblox.com/v1/games?universeIds=${gameID}`);
     const { playing, visits, favoritedCount } = gameInfo.data[0];
     return { playing, visits, favoritedCount };
 };
 
 exports.gameVotesInfo = async (gameID) => {
+    await Sleep();
     const votesInfo = await makeRequest(`https://games.roblox.com/v1/games/votes?universeIds=${gameID}`);
     const { upVotes, downVotes } = votesInfo.data[0];
     const ratings = upVotes + downVotes === 0 ? 0 : (upVotes / (upVotes + downVotes)) * 100;
@@ -30,6 +36,7 @@ exports.gameVotesInfo = async (gameID) => {
 };
 
 exports.groupInfo = async (groupID) => {
+    await Sleep();
     const groupInfo = await makeRequest(`https://groups.roblox.com/v1/groups/${groupID}`);
     return {
         memberCount: groupInfo.memberCount,
