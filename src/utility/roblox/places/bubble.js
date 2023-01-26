@@ -47,7 +47,6 @@ async function returnSQL(type) {
 
 setInterval(async () => {
     const { playing, visits, favoritedCount } = await gameInfo(4158951932);
-    await new Promise((resolve) => setTimeout(resolve, 10000));
     const { fixedRatings } = await gameVotesInfo(4158951932);
     gamesCurrentUser.set(playing);
     gamesCurrentVisits.set(visits);

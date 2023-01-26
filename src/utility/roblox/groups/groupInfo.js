@@ -28,17 +28,14 @@ const StormyGroupCount = new prom.Gauge({
 setInterval(async () => {
     const PlayCrate = await groupInfo(13004189);
     PlayCrateGroupCount.set(PlayCrate.memberCount);
-    await new Promise((resolve) => setTimeout(resolve, 10000));
     console.log(PlayCrate.memberCount);
 
     await redis.set('play_crate_group_count', PlayCrate.memberCount);
 
     const MineCart = await groupInfo(5799338);
     MineCartGroupCount.set(MineCart.memberCount);
-    await new Promise((resolve) => setTimeout(resolve, 10000));
     const Breaded = await groupInfo(3409253);
     BreadedGroupCount.set(Breaded.memberCount);
-    await new Promise((resolve) => setTimeout(resolve, 10000));
     const Stormy = await groupInfo(5998745);
     StormyGroupCount.set(Stormy.memberCount);
 }, server.refresh_time);
