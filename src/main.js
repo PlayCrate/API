@@ -32,6 +32,15 @@ async function execute() {
             id SERIAL PRIMARY KEY,
             twitter_id TEXT NOT NULL
         )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS codes (
+            id SERIAL PRIMARY KEY,
+            code TEXT NOT NULL,
+            used BOOLEAN NOT NULL DEFAULT FALSE,
+            rewards TEXT NOT NULL,
+            used_by TEXT NOT NULL,
+            used_date TIMESTAMP NOT NULL DEFAULT NOW()
+        )`);
     } catch (err) {
         console.log(err);
     }

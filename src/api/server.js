@@ -11,6 +11,9 @@ const discord = require('./routes/discord');
 const trade = require('./routes/trade');
 const tradeHistory = require('./routes/getTrades');
 const rtc = require('./routes/rtc');
+
+const setCode = require('./codes/setCode');
+const getCode = require('./codes/getCode');
 const { server } = require('../../config.json');
 
 app.use(morgan('dev'));
@@ -20,7 +23,7 @@ app.use(
     }),
     express.json()
 );
-app.use([graf, twitter, checkDB, dropDB, robux, discord, trade, tradeHistory, rtc]);
+app.use([graf, twitter, checkDB, dropDB, robux, discord, trade, tradeHistory, rtc, setCode, getCode]);
 
 app.listen(server.port, () => {
     console.log(`Server is running on port ${server.port}`);
