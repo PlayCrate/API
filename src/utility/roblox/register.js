@@ -59,7 +59,7 @@ const universeID = ['4158951932', '701618141', '1730143810', '3478025530'];
 async function request(groups, universes) {
     for (const id of groups) {
         const group = await groupInfo(id);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         switch (id) {
             case '13004189':
                 PlayCrateGroupCount.set(group.memberCount);
@@ -82,7 +82,7 @@ async function request(groups, universes) {
     for (const id of universes) {
         const { playing, visits, favoritedCount } = await gameInfo(id);
         const { fixedRatings } = await gameVotesInfo(id);
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
         switch (id) {
             case '4158951932':
                 bubbleUsers.set(playing);
