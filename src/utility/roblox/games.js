@@ -3,18 +3,21 @@ const randUserAgent = require('rand-user-agent');
 const agent = randUserAgent('desktop');
 
 async function makeRequest(url) {
-    const asd = await fetch(url, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'User-Agent': agent,
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json',
-        },
-    }).then((res) => res.json());
+    try {
+        const asd = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'User-Agent': agent,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+            },
+        }).then((res) => res.json());
 
-    if (!asd) return;
-    return asd;
+        return asd;
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 exports.gameInfo = async (gameID) => {
