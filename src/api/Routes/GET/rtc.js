@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const sql = require('../../database/db');
 const Redis = require('ioredis');
 const redis = new Redis({});
 

@@ -1,14 +1,57 @@
 const { Pool } = require('pg');
-const { postgres } = require('../../config.json');
 
 const sql = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'postgres',
-    password: postgres.password,
-    port: 5432,
+    ...bot.Config.postgres,
 });
 
-sql.connect(() => console.log(`Connected to PostgreSQL database.`));
+sql.connect(async () => {
+    console.log(`Connected to PostgreSQL database.`);
+
+    try {
+        await sql.query(
+            `CREATE TABLE IF NOT EXISTS users (
+                id SERIAL PRIMARY KEY, 
+                username TEXT NOT NULL, 
+                twitter_id TEXT NOT NULL, 
+                robloxID TEXT NOT NULL, 
+                follow_date TIMESTAMP NOT NULL DEFAULT NOW(), 
+                game_id TEXT NOT NULL, 
+                twitter_account TEXT NOT NULL
+            )`
+        );
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS robux (
+                id SERIAL PRIMARY KEY,
+                robloxid TEXT NOT NULL,
+                robux_spent INTEGER NOT NULL,
+                spent_date TIMESTAMP NOT NULL DEFAULT NOW()
+            )`);
+        await sql.query('ALTER TABLE robux ADD COLUMN IF NOT EXISTS purchase_type VARCHAR(255)');
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS trades(
+                id SERIAL PRIMARY KEY,
+                roblox_id TEXT NOT NULL,
+                recipient_id TEXT NOT NULL,
+                items JSONB NOT NULL,
+                trade_date TIMESTAMP NOT NULL DEFAULT NOW()
+            )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS twitter_ids (
+                id SERIAL PRIMARY KEY,
+                twitter_id TEXT NOT NULL
+            )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS codes (
+                id SERIAL PRIMARY KEY,
+                code TEXT NOT NULL,
+                used BOOLEAN NOT NULL DEFAULT FALSE,
+                rewards TEXT NOT NULL,
+                used_by TEXT NOT NULL,
+                used_date TIMESTAMP NOT NULL DEFAULT NOW()
+            )`);
+    } catch (err) {
+        throw new Error(`Failed to create tables: ${err}`);
+    }
+});
 
 module.exports = sql;

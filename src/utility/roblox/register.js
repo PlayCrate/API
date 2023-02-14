@@ -52,43 +52,54 @@ const {
 } = require('../roblox/groups/groupInfo');
 
 const { groupInfo, gameInfo, gameVotesInfo } = require('./games');
-const { server } = require('../../../config.json');
 
-const groupIDs = ['13004189', '5799338', '3409253', '5998745'];
-const universeID = ['4158951932', '701618141', '1730143810', '3478025530'];
-async function request(groups, universes) {
-    for (const id of groups) {
-        const group = await groupInfo(id);
-        await new Promise((resolve) => setTimeout(resolve, 10000));
+async function Looper() {
+    const groupIDs = ['13004189', '5799338', '3409253', '5998745'];
+    const promises = groupIDs.map(async (id) => {
+        const info = await groupInfo(id);
+        return { id, info };
+    });
+
+    const result = await Promise.all(promises);
+    for (const { id, info } of result) {
         switch (id) {
             case '13004189':
-                PlayCrateGroupCount.set(group.memberCount);
-                await redis.set('play_crate_group_count', group.memberCount);
+                PlayCrateGroupCount.set(info.memberCount);
+                await redis.set('play_crate_group_count', info.memberCount);
                 break;
             case '5799338':
-                MineCartGroupCount.set(group.memberCount);
+                MineCartGroupCount.set(info.memberCount);
                 break;
             case '3409253':
-                BreadedGroupCount.set(group.memberCount);
+                BreadedGroupCount.set(info.memberCount);
                 break;
             case '5998745':
-                StormyGroupCount.set(group.memberCount);
+                StormyGroupCount.set(info.memberCount);
                 break;
             default:
                 break;
         }
     }
 
-    for (const id of universes) {
-        const { playing, visits, favoritedCount } = await gameInfo(id);
-        const { fixedRatings } = await gameVotesInfo(id);
-        await new Promise((resolve) => setTimeout(resolve, 10000));
+    const universeID = ['4158951932', '701618141', '1730143810', '3478025530'];
+    const promises2 = universeID.map(async (id) => {
+        const info = await gameInfo(id);
+        const votes = await gameVotesInfo(id);
+        return { id, info, votes };
+    });
+
+    const result2 = await Promise.all(promises2);
+    for (const { id, info, votes } of result2) {
+        const { playing, visits, favoritedCount } = info;
+        let { fixedRatings } = votes;
+        fixedRatings = Number(fixedRatings);
+
         switch (id) {
             case '4158951932':
                 bubbleUsers.set(playing);
                 bubbleVisits.set(visits);
                 bubbleFav.set(favoritedCount);
-                bubbleRating.set(Number(fixedRatings));
+                bubbleRating.set(fixedRatings);
 
                 await redis.set('play_crate_playing', playing);
                 await redis.set('play_crate_visits', visits);
@@ -99,19 +110,19 @@ async function request(groups, universes) {
                 eatingUsers.set(playing);
                 eatingVisits.set(visits);
                 eatingFav.set(favoritedCount);
-                eatingRating.set(Number(fixedRatings));
+                eatingRating.set(fixedRatings);
                 break;
             case '1730143810':
                 islandUser.set(playing);
                 islandVisit.set(visits);
                 islandFav.set(favoritedCount);
-                islandRating.set(Number(fixedRatings));
+                islandRating.set(fixedRatings);
                 break;
             case '3478025530':
                 rotopiaUsers.set(playing);
                 rotopiaVisits.set(visits);
                 rotopiaFav.set(favoritedCount);
-                rotopiaRating.set(Number(fixedRatings));
+                rotopiaRating.set(fixedRatings);
                 break;
             default:
                 break;
@@ -119,11 +130,14 @@ async function request(groups, universes) {
     }
 }
 
-request(groupIDs, universeID).then(() => {
-    setInterval(() => {
-        request(groupIDs, universeID);
-    }, server.refresh_time);
-});
+(async () => {
+    await Looper();
+
+    setInterval(async () => {
+        await Looper();
+        console.log(`[Roblox API] Updated metrics!`);
+    }, bot.Config.server.refresh_time);
+})();
 
 for (const metrics of [
     islandFav,

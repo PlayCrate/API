@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { getTwitter } = require('../../utility/endpoints/twitter');
-const { middleWare } = require('../middleWare');
+const { getTwitter } = require('../../../utility/endpoints/twitter');
+const { middleWare } = require('../../Middleware/middleWare');
 
 router.post('/twitter', middleWare, async (req, res) => {
     const bodyType = Object.keys(req.body)[0];

@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const { twitter } = require('../../../config.json');
 
 async function getUser(username) {
     const { data } = await fetch(
@@ -8,7 +7,7 @@ async function getUser(username) {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${twitter.bearer_token}`,
+                'Authorization': `Bearer ${bot.Config.twitter.bearer_token}`,
             },
         }
     ).then((res) => res.json());

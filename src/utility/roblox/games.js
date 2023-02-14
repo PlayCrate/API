@@ -16,7 +16,7 @@ async function makeRequest(url) {
 
         return asd;
     } catch (err) {
-        console.error(err);
+        throw new Error(err);
     }
 }
 

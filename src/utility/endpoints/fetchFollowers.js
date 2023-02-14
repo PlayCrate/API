@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const { twitter } = require('../../../config.json');
 const sql = require('../../database/db');
 
 async function FetchAllFollowers() {
@@ -9,7 +8,7 @@ async function FetchAllFollowers() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${twitter.bearer_token}`,
+                'Authorization': `Bearer ${bot.Config.twitter.bearer_token}`,
             },
         }
     ).then((res) => res.json());

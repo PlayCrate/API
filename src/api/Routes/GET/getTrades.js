@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { middleWare } = require('../middleWare');
-const sql = require('../../database/db');
+const { middleWare } = require('../../Middleware/middleWare');
+const sql = require('../../../database/db');
 
 router.get('/trade-history/:robloxID', middleWare, async (req, res) => {
     const { robloxID } = req.params;

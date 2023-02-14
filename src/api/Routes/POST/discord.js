@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { middleWare } = require('../middleWare');
+const { middleWare } = require('../../Middleware/middleWare');
 const fetch = require('node-fetch');
 
 router.post('/discord', middleWare, async (req, res) => {

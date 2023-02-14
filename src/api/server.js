@@ -1,30 +1,26 @@
+const { join } = require('path');
+const fs = require('fs');
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const app = express();
-const graf = require('./routes/grafana');
-const twitter = require('./routes/following');
-const checkDB = require('./routes/checkDB');
-const dropDB = require('./routes/dropDB');
-const robux = require('./routes/recieveData');
-const discord = require('./routes/discord');
-const trade = require('./routes/trade');
-const tradeHistory = require('./routes/getTrades');
-const rtc = require('./routes/rtc');
 
-const setCode = require('./codes/setCode');
-const getCode = require('./codes/getCode');
-const { server } = require('../../config.json');
+const App = express();
+const Routes = join(__dirname, 'Routes');
 
-app.use(morgan('dev'));
-app.use(
-    cors({
-        origin: server.type === 'production' ? ['https://grafana.kattah.me', 'https://roblox.com'] : '*',
-    }),
-    express.json()
-);
-app.use([graf, twitter, checkDB, dropDB, robux, discord, trade, tradeHistory, rtc, setCode, getCode]);
+(async () => {
+    for (const file of fs.readdirSync(Routes)) {
+        const subFolder = join(Routes, file);
+        const subFolderFiles = fs.readdirSync(subFolder);
 
-app.listen(server.port, () => {
-    console.log(`Server is running on port ${server.port}`);
+        for (const subFile of subFolderFiles) {
+            if (!subFile.endsWith('.js')) continue;
+            const Route = require(join(subFolder, subFile));
+            App.use(Route);
+        }
+    }
+})();
+
+App.use(cors(), express.json(), morgan('dev'));
+App.listen(bot.Config.server.port, () => {
+    console.log(`Server is running on port ${bot.Config.server.port}`);
 });

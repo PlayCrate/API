@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { middleWare } = require('../middleWare');
-const sql = require('../../database/db');
+const { middleWare } = require('../../Middleware/middleWare');
+const sql = require('../../../database/db');
 
 router.post('/trade', middleWare, async (req, res) => {
     const { roblox_id, recipient_id, items } = req.body;
