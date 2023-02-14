@@ -6,6 +6,10 @@ const cors = require('cors');
 
 const App = express();
 const Routes = join(__dirname, 'Routes');
+App.use(cors(), express.json(), morgan('dev'));
+App.listen(bot.Config.server.port, () => {
+    console.log(`Server is running on port ${bot.Config.server.port}`);
+});
 
 (async () => {
     for (const file of fs.readdirSync(Routes)) {
@@ -19,8 +23,3 @@ const Routes = join(__dirname, 'Routes');
         }
     }
 })();
-
-App.use(cors(), express.json(), morgan('dev'));
-App.listen(bot.Config.server.port, () => {
-    console.log(`Server is running on port ${bot.Config.server.port}`);
-});
