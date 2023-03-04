@@ -13,7 +13,7 @@ async function makeRequest(url) {
                 'Accept': 'application/json',
             },
         }).then((res) => res.json());
-
+        if (asd.errors) throw new Error(asd.errors[0].message);
         return asd;
     } catch (err) {
         throw new Error(err);

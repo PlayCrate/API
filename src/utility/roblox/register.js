@@ -131,12 +131,16 @@ async function Looper() {
 }
 
 (async () => {
-    await Looper();
-
-    setInterval(async () => {
+    try {
         await Looper();
-        console.log(`[Roblox API] Updated metrics!`);
-    }, bot.Config.server.refresh_time);
+
+        setInterval(async () => {
+            await Looper();
+            console.log(`[Roblox API] Updated metrics!`);
+        }, bot.Config.server.refresh_time);
+    } catch (err) {
+        console.log(err);
+    }
 })();
 
 for (const metrics of [

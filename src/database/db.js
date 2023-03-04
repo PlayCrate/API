@@ -49,6 +49,14 @@ sql.connect(async () => {
                 used_by TEXT NOT NULL,
                 used_date TIMESTAMP NOT NULL DEFAULT NOW()
             )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS bans (
+                id SERIAL PRIMARY KEY,
+                roblox_id VARCHAR(255) NOT NULL,
+                item VARCHAR(255) NOT NULL,
+                amount INTEGER NOT NULL,
+                banned_date TIMESTAMP NOT NULL DEFAULT NOW()
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }
