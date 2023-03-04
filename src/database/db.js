@@ -57,6 +57,8 @@ sql.connect(async () => {
                 amount INTEGER NOT NULL,
                 banned_date TIMESTAMP NOT NULL DEFAULT NOW()
         )`);
+
+        await sql.query(`ALTER TABLE bans ADD COLUMN IF NOT EXISTS roblox_username VARCHAR(255)`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }
