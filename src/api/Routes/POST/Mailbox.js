@@ -38,7 +38,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        const requiredProps = ['petId', 'petUID', 'petLevel'];
+        const requiredProps = ['id', 'uid', 'lvl'];
         for (const pet of payload) {
             const missingProps = requiredProps.filter((prop) => !pet[prop]);
 
@@ -49,31 +49,31 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 });
             }
 
-            if (isNaN(pet.petId) || isNaN(pet.petLevel)) {
+            if (isNaN(pet.id) || isNaN(pet.lvl)) {
                 return res.json({
                     success: false,
-                    error: 'Malformed petId or petLevel',
+                    error: 'Malformed pet Id or pet Level',
                 });
             }
 
-            pet.petId = String(pet.petId);
-            pet.petLevel = Number(pet.petLevel);
+            pet.id = String(pet.id);
+            pet.lvl = Number(pet.lvl);
 
             const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
                 robloxId,
-                pet.petUID,
+                pet.uid,
             ]);
 
             if (rows.length > 0) {
                 return res.json({
                     success: false,
-                    error: `petUID ${pet.petUID} already exists`,
+                    error: `Pet UID ${pet.uid} already exists`,
                 });
             }
 
             await sql.query(
                 `INSERT INTO mailbox (robloxName, robloxId, petId, petUID, petLevel) VALUES ($1, $2, $3, $4, $5)`,
-                [robloxName, robloxId, pet.petId, pet.petUID, pet.petLevel]
+                [robloxName, robloxId, pet.id, pet.uid, pet.lvl]
             );
         }
 
@@ -118,12 +118,12 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        const pets = rows.map(({ petid: petId, petuid: petUID, petlevel: petLevel, maildate: mailDate }) => {
+        const pets = rows.map(({ petid: id, petuid: uid, petlevel: lvl, maildate: timestamp }) => {
             return {
-                petId,
-                petUID,
-                petLevel,
-                mailDate,
+                id,
+                uid,
+                lvl,
+                timestamp,
             };
         });
 
