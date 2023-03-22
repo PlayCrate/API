@@ -76,7 +76,8 @@ sql.connect(async () => {
                 petPower VARCHAR(255),
                 petSentDate INTEGER NOT NULL,
                 petSentMessage VARCHAR(255) NOT NULL,
-                petSenderId VARCHAR(255) NOT NULL
+                petSenderId VARCHAR(255) NOT NULL,
+                petSenderName VARCHAR(255) NOT NULL
         )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);

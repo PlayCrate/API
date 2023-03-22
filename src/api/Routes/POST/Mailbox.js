@@ -46,7 +46,21 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        const requiredProps = ['id', 'uid', 'idt', 'lvl', 'place', 'e', 'xp', 'nk', 'timestamp', 'message', 'senderId'];
+        const requiredProps = [
+            'id',
+            'uid',
+            'idt',
+            'lvl',
+            'place',
+            'e',
+            'xp',
+            'nk',
+            'timestamp',
+            'message',
+            'senderId',
+            'senderName',
+        ];
+
         for (const pet of payload) {
             const missingProps = requiredProps.filter((prop) => {
                 return typeof pet[prop] === 'undefined' || pet[prop] === null;
@@ -81,7 +95,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             try {
                 await sql.query(
-                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
                     [
                         robloxId,
                         robloxName,
@@ -98,6 +112,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                         pet.timestamp,
                         pet.message,
                         pet.senderId,
+                        pet.senderName,
                     ]
                 );
             } catch (err) {
@@ -162,6 +177,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 timestamp: pet.petsentdate,
                 message: pet.petsentmessage,
                 senderId: pet.petsenderid,
+                senderName: pet.petsendername,
             };
 
             if (pet.petserial !== null && pet.petserial !== undefined) {
