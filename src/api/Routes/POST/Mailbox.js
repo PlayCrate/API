@@ -32,6 +32,13 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
+        if (payload.length > 100) {
+            return res.json({
+                success: false,
+                error: 'Too many pets',
+            });
+        }
+
         if (!robloxName) {
             return res.json({
                 success: false,
@@ -39,9 +46,11 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        const requiredProps = ['id', 'uid', 'lvl'];
+        const requiredProps = ['id', 'uid', 'idt', 'lvl', 'place', 'e', 'xp', 'nk', 'timestamp', 'message', 'senderId'];
         for (const pet of payload) {
-            const missingProps = requiredProps.filter((prop) => !pet[prop]);
+            const missingProps = requiredProps.filter((prop) => {
+                return typeof pet[prop] === 'undefined' || pet[prop] === null;
+            });
 
             if (missingProps.length > 0) {
                 return res.json({
@@ -50,15 +59,13 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 });
             }
 
-            if (isNaN(pet.id) || isNaN(pet.lvl)) {
-                return res.json({
-                    success: false,
-                    error: 'Malformed pet Id or pet Level',
-                });
-            }
-
             pet.id = String(pet.id);
+            pet.idt = Number(pet.idt);
             pet.lvl = Number(pet.lvl);
+            pet.place = Number(pet.place);
+            pet.xp = Number(pet.xp);
+            pet.senderId = String(pet.senderId);
+            pet?.serial && (pet.serial = Number(pet.serial));
 
             const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
                 robloxId,
@@ -72,10 +79,34 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 });
             }
 
-            await sql.query(
-                `INSERT INTO mailbox (robloxName, robloxId, petId, petUID, petLevel) VALUES ($1, $2, $3, $4, $5)`,
-                [robloxName, robloxId, pet.id, pet.uid, pet.lvl]
-            );
+            try {
+                await sql.query(
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)`,
+                    [
+                        robloxId,
+                        robloxName,
+                        pet.id,
+                        pet.uid,
+                        pet.idt,
+                        pet.lvl,
+                        pet.place,
+                        pet.e,
+                        pet.xp,
+                        pet.nk,
+                        pet?.serial,
+                        pet?.power,
+                        pet.timestamp,
+                        pet.message,
+                        pet.senderId,
+                    ]
+                );
+            } catch (err) {
+                console.log(err);
+                return res.json({
+                    success: false,
+                    error: 'Unknown error',
+                });
+            }
         }
 
         return res.json({
@@ -119,13 +150,28 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        const pets = rows.map(({ petid: id, petuid: uid, petlevel: lvl, maildate: timestamp }) => {
-            return {
-                id,
-                uid,
-                lvl,
-                timestamp,
+        const pets = rows.map((pet) => {
+            const petObj = {
+                id: pet.petid,
+                uid: pet.petuid,
+                idt: pet.petidt,
+                lvl: pet.petlevel,
+                place: pet.petplace,
+                e: pet.pete,
+                xp: pet.petxp,
+                timestamp: pet.petsentdate,
+                message: pet.petsentmessage,
+                senderId: pet.petsenderid,
             };
+
+            if (pet.petserial !== null && pet.petserial !== undefined) {
+                petObj.serial = pet.petserial;
+            }
+
+            if (pet.petpower) {
+                petObj.power = pet.petpower;
+            }
+            return petObj;
         });
 
         return res.json({
