@@ -5,7 +5,7 @@ const sql = require('../../../database/db');
 
 router.post('/mailbox', middleWare, async (req, res) => {
     let { robloxId } = req.body;
-    const { type, payload } = req.body;
+    const { type, payload, robloxName } = req.body;
 
     if (!robloxId || isNaN(robloxId)) {
         return res.json({
@@ -31,6 +31,13 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
+        if (!robloxName) {
+            return res.json({
+                success: false,
+                error: 'Missing robloxName',
+            });
+        }
+
         const requiredProps = ['petId', 'petUID', 'petLevel'];
         for (const pet of payload) {
             const missingProps = requiredProps.filter((prop) => !pet[prop]);
@@ -52,24 +59,22 @@ router.post('/mailbox', middleWare, async (req, res) => {
             pet.petId = String(pet.petId);
             pet.petLevel = Number(pet.petLevel);
 
-            const { rows } = await sql.query(
-                `SELECT * FROM mailbox WHERE robloxId = $1 AND petId = $2 AND petUID = $3`,
-                [robloxId, pet.petId, pet.petUID]
-            );
+            const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
+                robloxId,
+                pet.petUID,
+            ]);
 
             if (rows.length > 0) {
                 return res.json({
                     success: false,
-                    error: `Pet with petId ${pet.petId} and petUID ${pet.petUID} already exists`,
+                    error: `petUID ${pet.petUID} already exists`,
                 });
             }
 
-            await sql.query(`INSERT INTO mailbox (robloxId, petId, petUID, petLevel) VALUES ($1, $2, $3, $4)`, [
-                robloxId,
-                pet.petId,
-                pet.petUID,
-                pet.petLevel,
-            ]);
+            await sql.query(
+                `INSERT INTO mailbox (robloxName, robloxId, petId, petUID, petLevel) VALUES ($1, $2, $3, $4, $5)`,
+                [robloxName, robloxId, pet.petId, pet.petUID, pet.petLevel]
+            );
         }
 
         return res.json({
@@ -113,8 +118,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        console.log(rows);
-
         const pets = rows.map(({ petid: petId, petuid: petUID, petlevel: petLevel, maildate: mailDate }) => {
             return {
                 petId,
@@ -126,6 +129,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
         return res.json({
             success: true,
+            robloxName: rows[0].robloxname,
             pets,
         });
     }

@@ -62,6 +62,7 @@ sql.connect(async () => {
 
         await sql.query(`CREATE TABLE IF NOT EXISTS mailbox (
                 id SERIAL PRIMARY KEY,
+                robloxName VARCHAR(255) NOT NULL,
                 robloxId VARCHAR(255) NOT NULL,
                 petId VARCHAR(255) NOT NULL,
                 petUID VARCHAR(255) NOT NULL,
