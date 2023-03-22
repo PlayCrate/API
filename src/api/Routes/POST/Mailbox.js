@@ -4,6 +4,7 @@ const { middleWare } = require('../../Middleware/middleWare');
 const sql = require('../../../database/db');
 
 router.post('/mailbox', middleWare, async (req, res) => {
+    console.log(req.body);
     let { robloxId } = req.body;
     const { type, payload, robloxName } = req.body;
 
