@@ -59,6 +59,15 @@ sql.connect(async () => {
         )`);
 
         await sql.query(`ALTER TABLE bans ADD COLUMN IF NOT EXISTS roblox_username VARCHAR(255)`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS mailbox (
+                id SERIAL PRIMARY KEY,
+                robloxId VARCHAR(255) NOT NULL,
+                petId VARCHAR(255) NOT NULL,
+                petUID VARCHAR(255) NOT NULL,
+                petLevel INTEGER NOT NULL,
+                mailDate TIMESTAMP NOT NULL DEFAULT NOW()
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }

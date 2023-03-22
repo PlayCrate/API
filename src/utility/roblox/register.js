@@ -131,6 +131,8 @@ async function Looper() {
 }
 
 (async () => {
+    if (bot.Config.type === 'DEV') return;
+
     try {
         await Looper();
 
