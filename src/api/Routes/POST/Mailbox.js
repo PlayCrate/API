@@ -52,7 +52,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
             'idt',
             'lvl',
             'place',
-            'e',
             'xp',
             'nk',
             'timestamp',
@@ -98,7 +97,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             try {
                 await sql.query(
-                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
                     [
                         robloxId,
                         robloxName,
@@ -107,7 +106,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
                         pet.idt,
                         pet.lvl,
                         pet.place,
-                        pet.e,
                         pet.xp,
                         pet.nk,
                         pet?.serial,
@@ -177,7 +175,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 idt: pet.petidt,
                 lvl: pet.petlevel,
                 place: pet.petplace,
-                e: pet.pete,
                 xp: pet.petxp,
                 timestamp: pet.petsentdate,
                 message: pet.petsentmessage,

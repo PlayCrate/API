@@ -66,7 +66,6 @@ sql.connect(async () => {
                 robloxId VARCHAR(255) NOT NULL,
                 petIdt INTEGER NOT NULL,
                 petPlace INTEGER NOT NULL,
-                petE BOOLEAN NOT NULL,
                 petXp INTEGER NOT NULL,
                 petName VARCHAR(255) NOT NULL,
                 petId VARCHAR(255) NOT NULL,
