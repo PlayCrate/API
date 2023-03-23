@@ -60,6 +60,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
             'senderId',
             'senderName',
             'displayName',
+            'targetId',
         ];
 
         for (const pet of payload) {
@@ -80,6 +81,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
             pet.place = Number(pet.place);
             pet.xp = Number(pet.xp);
             pet.senderId = String(pet.senderId);
+            pet.targetId = String(pet.targetId);
             pet?.serial && (pet.serial = Number(pet.serial));
 
             const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
@@ -96,7 +98,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             try {
                 await sql.query(
-                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
                     [
                         robloxId,
                         robloxName,
@@ -115,6 +117,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                         pet.senderId,
                         pet.senderName,
                         pet.displayName,
+                        pet.targetId,
                     ]
                 );
             } catch (err) {
@@ -181,6 +184,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 senderId: pet.petsenderid,
                 senderName: pet.petsendername,
                 displayName: pet.displayname,
+                targetId: pet.targetid,
             };
 
             if (pet.petserial !== null && pet.petserial !== undefined) {
