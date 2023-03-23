@@ -180,7 +180,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 message: pet.petsentmessage,
                 senderId: pet.petsenderid,
                 senderName: pet.petsendername,
-                displayName: pet.displayName,
+                displayName: pet.displayname,
             };
 
             if (pet.petserial !== null && pet.petserial !== undefined) {
