@@ -32,13 +32,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
             });
         }
 
-        if (payload.length > 100) {
-            return res.json({
-                success: false,
-                error: 'Too many pets',
-            });
-        }
-
         if (!robloxName) {
             return res.json({
                 success: false,
@@ -82,6 +75,15 @@ router.post('/mailbox', middleWare, async (req, res) => {
             pet.senderId = String(pet.senderId);
             pet.targetId = String(pet.targetId);
             pet?.serial && (pet.serial = Number(pet.serial));
+
+            // if row of robloxId is over 100, the return false
+            const { rows: check } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1`, [robloxId]);
+            if (check?.length >= 100) {
+                return res.json({
+                    success: false,
+                    error: 'FULL',
+                });
+            }
 
             const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
                 robloxId,
