@@ -59,6 +59,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
             'message',
             'senderId',
             'senderName',
+            'displayName',
         ];
 
         for (const pet of payload) {
@@ -95,7 +96,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             try {
                 await sql.query(
-                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)`,
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petE, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)`,
                     [
                         robloxId,
                         robloxName,
@@ -113,6 +114,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                         pet.message,
                         pet.senderId,
                         pet.senderName,
+                        pet.displayName,
                     ]
                 );
             } catch (err) {
@@ -178,6 +180,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 message: pet.petsentmessage,
                 senderId: pet.petsenderid,
                 senderName: pet.petsendername,
+                displayName: pet.displayName,
             };
 
             if (pet.petserial !== null && pet.petserial !== undefined) {

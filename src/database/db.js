@@ -77,27 +77,8 @@ sql.connect(async () => {
                 petSentDate INTEGER NOT NULL,
                 petSentMessage VARCHAR(255) NOT NULL,
                 petSenderId VARCHAR(255) NOT NULL,
-                petSenderName VARCHAR(255) NOT NULL
-        )`);
-
-        await sql.query(`CREATE TABLE IF NOT EXISTS mailbox_rejected (
-                id SERIAL PRIMARY KEY,
-                robloxName VARCHAR(255) NOT NULL,
-                robloxId VARCHAR(255) NOT NULL,
-                petIdt INTEGER NOT NULL,
-                petPlace INTEGER NOT NULL,
-                petE BOOLEAN NOT NULL,
-                petXp INTEGER NOT NULL,
-                petName VARCHAR(255) NOT NULL,
-                petId VARCHAR(255) NOT NULL,
-                petUID VARCHAR(255) NOT NULL,
-                petLevel INTEGER NOT NULL,
-                petSerial INTEGER,
-                petPower VARCHAR(255),
-                petSentDate INTEGER NOT NULL,
-                petSentMessage VARCHAR(255) NOT NULL,
-                petSenderId VARCHAR(255) NOT NULL,
-                petSenderName VARCHAR(255) NOT NULL
+                petSenderName VARCHAR(255) NOT NULL,
+                displayName VARCHAR(255) NOT NULL
         )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
