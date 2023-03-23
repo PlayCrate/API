@@ -76,6 +76,7 @@ sql.connect(async () => {
                 petSentDate INTEGER NOT NULL,
                 petSentMessage VARCHAR(255) NOT NULL,
                 petSenderId VARCHAR(255) NOT NULL,
+                petShiny BOOLEAN,
                 petSenderName VARCHAR(255) NOT NULL,
                 displayName VARCHAR(255) NOT NULL,
                 targetId VARCHAR(255) NOT NULL
