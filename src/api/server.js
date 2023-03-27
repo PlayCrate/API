@@ -27,14 +27,9 @@ if (cluster.isMaster) {
     const Routes = join(__dirname, 'Routes');
     const App = express();
 
-    App.use(cors(), express.json({ limit: '10mb' }), morgan('dev'));
+    App.use(cors(), express.json(), morgan('dev'));
     App.listen(bot.Config.server.port, () => {
         console.log(`Server is running on port ${bot.Config.server.port}`);
-    });
-
-    // log errors
-    App.use((err, req, res, next) => {
-        console.error(err.stack);
     });
 
     (async () => {
