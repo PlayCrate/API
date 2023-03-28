@@ -19,21 +19,21 @@ const {
     gamesCurrentVisits: islandVisit,
     gamesCurrentFavorites: islandFav,
     gameRating: islandRating,
-} = require('../roblox/places/island_life');
+} = require('./places/island_life');
 
 const {
     gamesCurrentUser: rotopiaUsers,
     gamesCurrentVisits: rotopiaVisits,
     gamesCurrentFavorites: rotopiaFav,
     gameRating: rotopiaRating,
-} = require('../roblox/places/rotopia');
+} = require('./places/rotopia');
 
 const {
     gamesCurrentUser: eatingUsers,
     gamesCurrentVisits: eatingVisits,
     gamesCurrentFavorites: eatingFav,
     gameRating: eatingRating,
-} = require('../roblox/places/eating_sim');
+} = require('./places/eating_sim');
 
 const {
     gamesCurrentUser: bubbleUsers,
@@ -42,14 +42,10 @@ const {
     gameRating: bubbleRating,
     productRobux,
     gamepassRobux,
-} = require('../roblox/places/bubble');
+} = require('./places/bubble');
 
-const {
-    PlayCrateGroupCount,
-    MineCartGroupCount,
-    BreadedGroupCount,
-    StormyGroupCount,
-} = require('../roblox/groups/groupInfo');
+const { PlayCrateGroupCount, MineCartGroupCount, BreadedGroupCount, StormyGroupCount } = require('./groups/groupInfo');
+const { CPUUsage, MemoryUsage } = require('./performance');
 
 const { groupInfo, gameInfo, gameVotesInfo } = require('./games');
 
@@ -131,6 +127,26 @@ async function Looper() {
 }
 
 (async () => {
+    function CPU() {
+        const cpuUsage = process.cpuUsage();
+        const uptime = process.uptime() * 1000;
+        const cpuPercent = ((cpuUsage.user + cpuUsage.system) / uptime) * 100;
+
+        // Round the CPU usage percentage to two decimal places
+        return parseFloat(cpuPercent.toFixed(2));
+    }
+
+    function MEM() {
+        const used = process.memoryUsage().heapUsed;
+        const total = Math.max(process.memoryUsage().heapTotal, used);
+        return (used / total) * 100;
+    }
+
+    setInterval(() => {
+        CPUUsage.set(CPU());
+        MemoryUsage.set(MEM());
+    }, 1000);
+
     if (bot.Config.type === 'DEV') return;
 
     try {
@@ -168,6 +184,8 @@ for (const metrics of [
     MineCartGroupCount,
     BreadedGroupCount,
     StormyGroupCount,
+    CPUUsage,
+    MemoryUsage,
 ]) {
     register.registerMetric(metrics);
 }
