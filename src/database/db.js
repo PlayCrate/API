@@ -81,6 +81,8 @@ sql.connect(async () => {
                 displayName VARCHAR(255) NOT NULL,
                 targetId VARCHAR(255) NOT NULL
         )`);
+
+        await sql.query(`ALTER TABLE mailbox ADD COLUMN IF NOT EXISTS petSigned VARCHAR(255)`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }

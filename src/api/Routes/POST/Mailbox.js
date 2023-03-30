@@ -105,7 +105,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             try {
                 await sql.query(
-                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId, petShiny) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId, petShiny, petSigned) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)`,
                     [
                         robloxId,
                         robloxName,
@@ -125,6 +125,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                         pet.displayName,
                         pet.targetId,
                         pet?.s,
+                        pet?.signed,
                     ]
                 );
             } catch (err) {
@@ -204,6 +205,10 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             if (pet.petshiny) {
                 petObj.s = pet.petshiny;
+            }
+
+            if (pet.petsigned) {
+                petObj.signed = pet.petsigned;
             }
             return petObj;
         });
