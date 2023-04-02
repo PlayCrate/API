@@ -83,6 +83,12 @@ sql.connect(async () => {
         )`);
 
         await sql.query(`ALTER TABLE mailbox ADD COLUMN IF NOT EXISTS petSigned VARCHAR(255)`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS pets_count (
+                id SERIAL PRIMARY KEY,
+                petId VARCHAR(255) NOT NULL,
+                petCount INTEGER NOT NULL
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }
