@@ -87,7 +87,8 @@ sql.connect(async () => {
         await sql.query(`CREATE TABLE IF NOT EXISTS pets_count (
                 id SERIAL PRIMARY KEY,
                 petId VARCHAR(255) NOT NULL,
-                petCount INTEGER NOT NULL
+                petCount INTEGER NOT NULL,
+                petShiny BOOLEAN NOT NULL
         )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);

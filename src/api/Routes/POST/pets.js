@@ -11,6 +11,7 @@ async function SetPets() {
         return {
             petId: pet.petid,
             count: pet.petcount,
+            s: pet.petshiny,
         };
     });
 
@@ -49,7 +50,7 @@ router.post('/pets', middleWare, async (req, res) => {
             });
         }
 
-        const requiredProps = ['petId', 'count'];
+        const requiredProps = ['petId', 'count', 's'];
 
         for (const pet of payload) {
             const missingProps = requiredProps.filter((prop) => {
@@ -71,14 +72,21 @@ router.post('/pets', middleWare, async (req, res) => {
             }
 
             try {
-                const petExists = await sql.query('SELECT * FROM pets_count WHERE petId = $1', [pet.petId]);
+                const petExists = await sql.query('SELECT * FROM pets_count WHERE petId = $1 AND petShiny = $2', [
+                    pet.petId,
+                    pet.s,
+                ]);
                 if (petExists.rowCount === 0) {
-                    await sql.query('INSERT INTO pets_count (petId, petCount) VALUES ($1, $2)', [pet.petId, pet.count]);
-                } else {
-                    await sql.query('UPDATE pets_count SET petCount = petCount + $1 WHERE petId = $2', [
-                        pet.count,
+                    await sql.query('INSERT INTO pets_count (petId, petCount, petShiny) VALUES ($1, $2, $3)', [
                         pet.petId,
+                        pet.count,
+                        pet.s,
                     ]);
+                } else {
+                    await sql.query(
+                        'UPDATE pets_count SET petCount = petCount + $1 WHERE petId = $2 AND petShiny = $3',
+                        [pet.count, pet.petId, pet.s]
+                    );
                 }
             } catch (err) {
                 return res.json({
@@ -99,7 +107,7 @@ router.post('/pets', middleWare, async (req, res) => {
             });
         }
 
-        const requiredProps = ['petId', 'count'];
+        const requiredProps = ['petId', 'count', 's'];
 
         for (const pet of payload) {
             const missingProps = requiredProps.filter((prop) => {
@@ -121,17 +129,20 @@ router.post('/pets', middleWare, async (req, res) => {
             }
 
             try {
-                const petExists = await sql.query('SELECT * FROM pets_count WHERE petId = $1', [pet.petId]);
+                const petExists = await sql.query('SELECT * FROM pets_count WHERE petId = $1 AND petShiny = $2', [
+                    pet.petId,
+                    pet.s,
+                ]);
                 if (petExists.rowCount === 0) {
                     return res.json({
                         success: false,
                         error: 'Pet does not exist',
                     });
                 } else {
-                    await sql.query('UPDATE pets_count SET petCount = petCount - $1 WHERE petId = $2', [
-                        pet.count,
-                        pet.petId,
-                    ]);
+                    await sql.query(
+                        'UPDATE pets_count SET petCount = petCount - $1 WHERE petId = $2 AND petShiny = $3',
+                        [pet.count, pet.petId, pet.s]
+                    );
                 }
             } catch (err) {
                 return res.json({
