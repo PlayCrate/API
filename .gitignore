@@ -5,3 +5,6 @@ coverage
 psqldump/
 twitter.js
 scripts/
+test2.js 
+.node-version
+dump.rdb
