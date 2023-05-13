@@ -3,24 +3,74 @@ const router = express.Router();
 const { middleWare } = require('../../Middleware/middleWare');
 const sql = require('../../../database/db');
 
+const limits = [
+    { petId: 1, limit: 200 },
+    { petId: 2, limit: 100 },
+    { petId: 3, limit: 50 },
+];
+
 router.post('/pets-serial', middleWare, async (req, res) => {
-    const { petId } = req.body;
+    const { petId, payload } = req.body;
 
-    // Insert new pet record with new serial value
-    const query = `
-        INSERT INTO pets_serial (pet_id, serial)
-        VALUES ($1::varchar, (
-            SELECT COALESCE(MAX(serial), 0) + 1
-            FROM pets_serial
-            WHERE pet_id = $1::varchar
-        ))
-        ON CONFLICT (pet_id, serial) DO NOTHING
-        RETURNING serial
-    `;
-    const result = await sql.query(query, [petId]);
-    const petSerial = result.rows[0]?.serial;
+    if (!petId || !payload) {
+        return res.json({
+            error: 'Missing petId or payload',
+        });
+    }
 
-    return res.json({ petSerial, petId });
+    if (payload === 'SEND') {
+        const limitObj = limits.find((item) => item.petId === petId);
+        if (!limitObj) {
+            return res.json({
+                success: false,
+                error: 'Invalid pet ID.',
+            });
+        }
+
+        const { limit } = limitObj;
+        try {
+            const { rows } = await sql.query(`SELECT * FROM pets_serial WHERE pet_id = $1`, [petId]);
+            const serial = rows.length + 1;
+
+            if (serial > limit) {
+                return res.json({
+                    success: false,
+                    error: 'Limit reached.',
+                });
+            }
+
+            await sql.query(`INSERT INTO pets_serial (pet_id, serial) VALUES ($1, $2)`, [petId, serial]);
+            return res.json({
+                success: true,
+                serial,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                error: 'Internal server error.',
+            });
+        }
+    } else if (payload === 'READ') {
+        try {
+            const { rows } = await sql.query(
+                `SELECT pet_id, COUNT(*) AS totalSerials FROM pets_serial GROUP BY pet_id`
+            );
+            const data = rows.map((row) => ({
+                petId: parseInt(row.pet_id, 10),
+                totalSerials: parseInt(row.totalserials, 10),
+            }));
+
+            return res.json({
+                success: true,
+                data,
+            });
+        } catch (error) {
+            return res.status(500).json({
+                success: false,
+                error: 'Internal server error.',
+            });
+        }
+    }
 });
 
 module.exports = router;
