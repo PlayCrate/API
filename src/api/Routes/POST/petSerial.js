@@ -12,7 +12,7 @@ const limits = [
 router.post('/pets-serial', middleWare, async (req, res) => {
     const { petId, payload } = req.body;
 
-    if (!petId || !payload) {
+    if (!payload) {
         return res.json({
             error: 'Missing petId or payload',
         });
