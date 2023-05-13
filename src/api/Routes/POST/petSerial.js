@@ -55,20 +55,22 @@ router.post('/pets-serial', middleWare, async (req, res) => {
             const { rows } = await sql.query(
                 `SELECT pet_id, COUNT(*) AS totalSerials FROM pets_serial GROUP BY pet_id`
             );
-            const data = rows
-                .map((row) => ({
-                    petId: parseInt(row.pet_id, 10),
-                    totalSerials: row.totalserials !== null ? parseInt(row.totalserials, 10) : 0,
-                }))
-                .filter((item) => limits.some((limit) => limit.petId === item.petId))
-                .map((item) => ({
-                    ...item,
-                    maxLimit: limits.find((limit) => limit.petId === item.petId)?.limit || 0,
-                }));
+
+            let array = [];
+            for (const limit of limits) {
+                const { petId, limit: maxLimit } = limit;
+                const totalSerials = parseInt(rows.find((row) => row.pet_id == petId)?.totalserials || 0, 10);
+
+                array.push({
+                    petId,
+                    totalSerials,
+                    maxLimit,
+                });
+            }
 
             return res.json({
                 success: true,
-                data,
+                data: array,
             });
         } catch (error) {
             console.log(error);
