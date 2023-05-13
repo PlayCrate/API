@@ -6,7 +6,7 @@ const sql = require('../../../database/db');
 const limits = [
     { petId: 1, limit: 200 },
     { petId: 2, limit: 100 },
-    { petId: 3, limit: 50 },
+    { petId: 4, limit: 50 },
 ];
 
 router.post('/pets-serial', middleWare, async (req, res) => {
@@ -55,16 +55,23 @@ router.post('/pets-serial', middleWare, async (req, res) => {
             const { rows } = await sql.query(
                 `SELECT pet_id, COUNT(*) AS totalSerials FROM pets_serial GROUP BY pet_id`
             );
-            const data = rows.map((row) => ({
-                petId: parseInt(row.pet_id, 10),
-                totalSerials: parseInt(row.totalserials, 10),
-            }));
+            const data = rows
+                .map((row) => ({
+                    petId: parseInt(row.pet_id, 10),
+                    totalSerials: row.totalserials !== null ? parseInt(row.totalserials, 10) : 0,
+                }))
+                .filter((item) => limits.some((limit) => limit.petId === item.petId))
+                .map((item) => ({
+                    ...item,
+                    maxLimit: limits.find((limit) => limit.petId === item.petId)?.limit || 0,
+                }));
 
             return res.json({
                 success: true,
                 data,
             });
         } catch (error) {
+            console.log(error);
             return res.status(500).json({
                 success: false,
                 error: 'Internal server error.',
