@@ -4,9 +4,9 @@ const { middleWare } = require('../../Middleware/middleWare');
 const sql = require('../../../database/db');
 
 const limits = [
-    { petId: 1, limit: 200 },
-    { petId: 2, limit: 100 },
-    { petId: 3, limit: 50 },
+    { petId: 308, limit: 300 },
+    { petId: 309, limit: 150 },
+    { petId: 310, limit: 50 },
 ];
 
 router.post('/pets-serial', middleWare, async (req, res) => {
