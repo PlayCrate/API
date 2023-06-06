@@ -242,10 +242,10 @@ router.post('/mailbox', middleWare, async (req, res) => {
         const pet = rows[0];
         const { petsendername, petsenderid, robloxname, targetid } = pet;
         try {
-            await sql.query(
+            const { rows } = await sql.query(
                 `UPDATE mailbox 
                 SET petSigned = $1, petSenderId = $2, petSenderName = $3, robloxName = $4, robloxId = $5, petSentDate = $6, petSentMessage = $7, displayName = $8, targetId = $9
-                WHERE robloxId = $10 AND petUID = $11`,
+                WHERE robloxId = $10 AND petUID = $11 RETURNING *`,
                 [
                     robloxname,
                     targetid,
@@ -260,6 +260,54 @@ router.post('/mailbox', middleWare, async (req, res) => {
                     petUID,
                 ]
             );
+
+            if (rows.length === 0) {
+                return res.json({
+                    success: false,
+                    error: 'Unknown robloxId',
+                });
+            }
+
+            const pets = rows.map((pet) => {
+                const petObj = {
+                    id: pet.petid,
+                    uid: pet.petuid,
+                    idt: pet.petidt,
+                    lvl: pet.petlevel,
+                    place: pet.petplace,
+                    xp: pet.petxp,
+                    nk: pet.petname,
+                    timestamp: pet.petsentdate,
+                    message: pet.petsentmessage,
+                    senderId: pet.petsenderid,
+                    senderName: pet.petsendername,
+                    displayName: pet.displayname,
+                    targetId: pet.targetid,
+                };
+
+                if (pet.petserial !== null && pet.petserial !== undefined) {
+                    petObj.serial = pet.petserial;
+                }
+
+                if (pet.petpower) {
+                    petObj.power = pet.petpower;
+                }
+
+                if (pet.petshiny) {
+                    petObj.s = pet.petshiny;
+                }
+
+                if (pet.petsigned) {
+                    petObj.signed = pet.petsigned;
+                }
+                return petObj;
+            });
+
+            return res.json({
+                success: true,
+                message: 'Successfully signed back pet',
+                pets,
+            });
         } catch (err) {
             console.log(err);
             return res.json({
@@ -267,11 +315,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 error: 'Unknown error',
             });
         }
-
-        return res.json({
-            success: true,
-            message: 'Successfully signed back pet',
-        });
     }
 });
 
