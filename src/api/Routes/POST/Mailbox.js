@@ -21,7 +21,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
         });
     }
 
-    if (type !== 'ADD' && type !== 'REMOVE' && type !== 'UPDATE' && type !== 'READ') {
+    if (type !== 'ADD' && type !== 'REMOVE' && type !== 'UPDATE' && type !== 'READ' && type !== 'SIGNBACK') {
         return res.json({
             success: false,
             error: `Unknown type: ${type}`,
@@ -217,6 +217,60 @@ router.post('/mailbox', middleWare, async (req, res) => {
             success: true,
             robloxName: rows[0].robloxname,
             pets,
+        });
+    } else if (type === 'SIGNBACK') {
+        const { robloxId, petUID } = req.body;
+        if (!robloxId || !petUID) {
+            return res.json({
+                success: false,
+                error: 'Missing robloxId or petUID',
+            });
+        }
+
+        const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
+            robloxId,
+            petUID,
+        ]);
+
+        if (rows.length === 0) {
+            return res.json({
+                success: false,
+                error: 'Could not find pet with that UID',
+            });
+        }
+
+        const pet = rows[0];
+        const { petsendername, petsenderid, robloxname, targetid } = pet;
+        try {
+            await sql.query(
+                `UPDATE mailbox 
+                SET petSigned = $1, petSenderId = $2, petSenderName = $3, robloxName = $4, robloxId = $5, petSentDate = $6, petSentMessage = $7, displayName = $8, targetId = $9
+                WHERE robloxId = $10 AND petUID = $11`,
+                [
+                    robloxname,
+                    targetid,
+                    robloxname,
+                    petsendername,
+                    petsenderid,
+                    Math.floor(Date.now() / 1000),
+                    `This is a signback pet from ${robloxname}`,
+                    robloxname,
+                    petsenderid,
+                    robloxId,
+                    petUID,
+                ]
+            );
+        } catch (err) {
+            console.log(err);
+            return res.json({
+                success: false,
+                error: 'Unknown error',
+            });
+        }
+
+        return res.json({
+            success: true,
+            message: 'Successfully signed back pet',
         });
     }
 });
