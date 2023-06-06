@@ -241,6 +241,14 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
         const pet = rows[0];
         const { petsendername, petsenderid, robloxname, targetid } = pet;
+        const { rows: check } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1`, [petsenderid]);
+        if (check?.length >= 100) {
+            return res.json({
+                success: false,
+                error: 'FULL',
+            });
+        }
+
         try {
             const { rows } = await sql.query(
                 `UPDATE mailbox 
