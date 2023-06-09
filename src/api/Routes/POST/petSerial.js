@@ -72,7 +72,7 @@ router.post('/pets-serial', middleWare, async (req, res) => {
             }
 
             return res.json({
-                success: true,
+                success: false,
                 data: array,
             });
         } catch (error) {
