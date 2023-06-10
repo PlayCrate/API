@@ -10,6 +10,9 @@ const limits = [
     { petId: 363, limit: 500 },
     { petId: 355, limit: 200 },
     { petId: 353, limit: 50 },
+    { petId: 386, limit: 500 },
+    { petId: 387, limit: 250 },
+    { petId: 388, limit: 50 },
 ];
 
 router.post('/pets-serial', middleWare, async (req, res) => {
