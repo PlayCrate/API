@@ -31,8 +31,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
     robloxId = String(robloxId);
 
     if (type === 'ADD') {
-        console.log(payload);
-
         if (!payload || !Array.isArray(payload) || payload.length === 0) {
             return res.json({
                 success: false,
