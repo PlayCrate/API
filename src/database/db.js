@@ -97,6 +97,15 @@ sql.connect(async () => {
             serial INTEGER NOT NULL,
             UNIQUE (pet_id, serial)
         )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS discord_verify (
+            id SERIAL PRIMARY KEY,
+            discord_id VARCHAR(255) NOT NULL,
+            discord_name VARCHAR(255) NOT NULL,
+            code VARCHAR(255) NOT NULL,
+            used BOOLEAN NOT NULL DEFAULT FALSE,
+            used_date TIMESTAMP NOT NULL DEFAULT NOW()
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }
