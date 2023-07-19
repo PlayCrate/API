@@ -251,7 +251,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                     robloxname,
                     petsendername,
                     petsenderid,
-                    Math.floor(Date.now() / 1000),
+                    0,
                     `This is a signback pet from ${robloxname}`,
                     robloxname,
                     petsenderid,
