@@ -320,6 +320,22 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 if (pet.petsigned) {
                     petObj.signed = pet.petsigned;
                 }
+
+                if (pet.ts) {
+                    petObj.ts = pet.ts;
+                }
+
+                if (pet.pethatchedbyname) {
+                    petObj.hatchedByName = pet.pethatchedbyname;
+                }
+
+                if (pet.pethatchedbyid) {
+                    petObj.hatchedById = pet.pethatchedbyid;
+                }
+
+                if (pet.nickname) {
+                    petObj.nickname = pet.nickname;
+                }
                 return petObj;
             });
 
