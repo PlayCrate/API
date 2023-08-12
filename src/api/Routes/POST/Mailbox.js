@@ -81,6 +81,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
             pet.senderId = String(pet.senderId);
             pet.targetId = String(pet.targetId);
             pet?.serial && (pet.serial = Number(pet.serial));
+            pet?.nickname && (pet.nickname = String(pet.nickname));
 
             const { rows } = await sql.query(`SELECT * FROM mailbox WHERE robloxId = $1 AND petUID = $2`, [
                 robloxId,
@@ -96,7 +97,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             try {
                 await sql.query(
-                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId, petShiny, petSigned, petTs, petHatchedByName, petHatchedById) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)`,
+                    `INSERT INTO mailbox (robloxId, robloxName, petId, petUID, petIdt, petLevel, petPlace, petXp, petName, petSerial, petPower, petSentDate, petSentMessage, petSenderId, petSenderName, displayName, targetId, petShiny, petSigned, petTs, petHatchedByName, petHatchedById, petNickname) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)`,
                     [
                         robloxId,
                         robloxName,
@@ -120,6 +121,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                         pet?.ts,
                         pet?.hatchedByName,
                         pet?.hatchedById,
+                        pet?.nickname,
                     ]
                 );
             } catch (err) {
@@ -215,6 +217,10 @@ router.post('/mailbox', middleWare, async (req, res) => {
 
             if (pet.pethatchedbyid) {
                 petObj.hatchedById = pet.pethatchedbyid;
+            }
+
+            if (pet.nickname) {
+                petObj.nickname = pet.nickname;
             }
             return petObj;
         });
