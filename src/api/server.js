@@ -7,7 +7,7 @@ const cors = require('cors');
 const Routes = join(__dirname, 'Routes');
 const App = express();
 
-App.use(cors(), express.json(), morgan('dev'));
+App.use(cors(), express.json());
 App.listen(bot.Config.server.port, () => {
     console.log(`Server is running on port ${bot.Config.server.port}`);
 });
