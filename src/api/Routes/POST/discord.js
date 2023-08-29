@@ -7,6 +7,7 @@ router.post('/discord', middleWare, async (req, res) => {
     const { embeds, link, token } = req.body;
     if (!embeds || !link) return res.json({ success: false, message: 'Missing embeds or link' });
 
+    console.log(embeds.forsen);
     try {
         const { status, statusText } = await fetch(link, {
             method: 'POST',
