@@ -110,6 +110,12 @@ sql.connect(async () => {
             used BOOLEAN NOT NULL DEFAULT FALSE,
             used_date TIMESTAMP NOT NULL DEFAULT NOW()
         )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS limited_pets (
+            id SERIAL PRIMARY KEY,
+            robloxId VARCHAR(255) NOT NULL,
+            petId VARCHAR(255) NOT NULL
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }

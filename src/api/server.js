@@ -1,7 +1,6 @@
 const { join } = require('path');
 const fs = require('fs');
 const express = require('express');
-const morgan = require('morgan');
 const cors = require('cors');
 
 const Routes = join(__dirname, 'Routes');
