@@ -227,10 +227,10 @@ router.post('/mailbox', middleWare, async (req, res) => {
             if (pet.enchanted) {
                 petObj.enchanted = pet.petenchanted;
             }
+
+            console.log(pet);
             return petObj;
         });
-
-        console.log(pets);
 
         return res.json({
             success: true,
