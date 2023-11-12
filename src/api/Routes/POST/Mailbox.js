@@ -224,7 +224,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 petObj.nickname = pet.nickname;
             }
 
-            if (pet.enchanted) {
+            if (pet.petenchanted) {
                 petObj.enchanted = pet.petenchanted;
             }
 
@@ -344,7 +344,7 @@ router.post('/mailbox', middleWare, async (req, res) => {
                     petObj.nickname = pet.nickname;
                 }
 
-                if (pet.enchanted) {
+                if (pet.petenchanted) {
                     petObj.enchanted = pet.petenchanted;
                 }
 
