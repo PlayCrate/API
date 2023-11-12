@@ -87,7 +87,7 @@ sql.connect(async () => {
         await sql.query(`ALTER TABLE mailbox ADD COLUMN IF NOT EXISTS petHatchedByName VARCHAR(255)`);
         await sql.query(`ALTER TABLE mailbox ADD COLUMN IF NOT EXISTS petHatchedById VARCHAR(255)`);
         await sql.query(`ALTER TABLE mailbox ADD COLUMN IF NOT EXISTS petNickname VARCHAR(255)`);
-        await sql.query(`ALATER TABLE mailbox ADD COLUMN IF NOT EXISTS petEnchanted BOOLEAN`);
+        await sql.query(`ALTER TABLE mailbox ADD COLUMN IF NOT EXISTS petEnchanted BOOLEAN`);
 
         await sql.query(`CREATE TABLE IF NOT EXISTS pets_count (
                 id SERIAL PRIMARY KEY,
