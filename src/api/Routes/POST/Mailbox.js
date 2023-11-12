@@ -230,6 +230,8 @@ router.post('/mailbox', middleWare, async (req, res) => {
             return petObj;
         });
 
+        console.log(pets);
+
         return res.json({
             success: true,
             robloxName: rows[0].robloxname,
