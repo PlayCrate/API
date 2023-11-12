@@ -116,6 +116,28 @@ sql.connect(async () => {
             robloxId VARCHAR(255) NOT NULL,
             petId VARCHAR(255) NOT NULL
         )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS vault_players (
+            roblox_id BIGINT PRIMARY KEY NOT NULL UNIQUE,
+            vault_invites BOOLEAN DEFAULT true NOT NULL,
+            player_settings BOOLEAN DEFAULT true NOT NULL,
+            vault_slots INT DEFAULT 50 NOT NULL,
+            access_slots INT DEFAULT 1 NOT NULL
+        )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS vault_invites (
+            roblox_id BIGINT NOT NULL,
+            requester_id BIGINT NOT NULL,
+            accepted BOOLEAN DEFAULT false NOT NULL,
+            FOREIGN KEY (roblox_id) REFERENCES vault_players(roblox_id) ON DELETE CASCADE
+        )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS vault(
+            id SERIAL PRIMARY KEY,
+            roblox_id BIGINT NOT NULL,
+            pets JSONB NOT NULL,
+            FOREIGN KEY (roblox_id) REFERENCES vault_players(roblox_id) ON DELETE CASCADE
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }

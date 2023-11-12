@@ -7,6 +7,16 @@ const Routes = join(__dirname, 'Routes');
 const App = express();
 
 App.use(cors(), express.json());
+
+App.use(function (req, res, next) {
+    res.setTimeout(5000, function () {
+        console.log('Request has timed out.');
+        res.sendStatus(408);
+    });
+
+    next();
+});
+
 App.listen(bot.Config.server.port, () => {
     console.log(`Server is running on port ${bot.Config.server.port}`);
 });
