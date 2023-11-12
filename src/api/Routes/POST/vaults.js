@@ -306,7 +306,6 @@ router.post('/vaults', middleWare, async (req, res) => {
 
             if (valid === true) {
                 for (const i of items) {
-                    console.log(depositer_id);
                     await sql.query(`INSERT INTO vault (roblox_id, pets) VALUES ($1, $2)`, [
                         depositer_id,
                         JSON.stringify(i),
