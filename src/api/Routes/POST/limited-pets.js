@@ -3,7 +3,10 @@ const router = express.Router();
 const { middleWare } = require('../../Middleware/middleWare');
 const sql = require('../../../database/db');
 
-const limiteds = [{ petId: 672, limit: 100 }];
+const limiteds = [
+    { petId: 672, limit: 100 },
+    { petId: 721, limit: 100 },
+];
 const payloads = ['PURCHASE_LIMITED', 'READ_LIMITED'];
 
 router.post('/limited-pets', middleWare, async (req, res) => {
