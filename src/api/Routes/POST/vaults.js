@@ -271,7 +271,7 @@ router.post('/vaults', middleWare, async (req, res) => {
 
         try {
             // CHGECK IF VAULT PLAYER EXISTS
-            const { rows } = await sql.query(`SELECT * FROM vault_players WHERE roblox_id = $1`, [robloxId]);
+            const { rows } = await sql.query(`SELECT * FROM vault_players WHERE roblox_id = $1`, [depositer_id]);
             if (rows.length === 0) {
                 return res.json({
                     success: false,
@@ -280,7 +280,7 @@ router.post('/vaults', middleWare, async (req, res) => {
             }
 
             // CHECK IF SLOTS GO OVER
-            const { rows: count } = await sql.query(`SELECT COUNT(*) FROM vault WHERE roblox_id = $1`, [robloxId]);
+            const { rows: count } = await sql.query(`SELECT COUNT(*) FROM vault WHERE roblox_id = $1`, [depositer_id]);
             const current_count = parseInt(count[0].count) + items.length;
             if (rows[0].vault_slots < current_count) {
                 return res.json({
@@ -297,7 +297,7 @@ router.post('/vaults', middleWare, async (req, res) => {
             } else {
                 const { rows: check_accepted } = await sql.query(
                     `SELECT * FROM vault_invites WHERE roblox_id = $1 AND requester_id = $2 AND accepted = true`,
-                    [robloxId, depositer_id]
+                    [depositer_id, robloxId]
                 );
                 if (check_accepted.length !== 0) {
                     valid = true;
@@ -307,7 +307,7 @@ router.post('/vaults', middleWare, async (req, res) => {
             if (valid === true) {
                 for (const i of items) {
                     await sql.query(`INSERT INTO vault (roblox_id, pets) VALUES ($1, $2)`, [
-                        robloxId,
+                        depositer_id,
                         JSON.stringify(i),
                     ]);
                 }
