@@ -139,6 +139,23 @@ sql.connect(async () => {
             pets JSONB NOT NULL,
             FOREIGN KEY (roblox_id) REFERENCES vault_players(roblox_id) ON DELETE CASCADE
         )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS clans (
+            owner_id BIGINT PRIMARY KEY NOT NULL UNIQUE,
+            owner_country VARCHAR(10) NOT NULL,
+
+            clan_name VARCHAR(4) NOT NULL UNIQUE,
+            clan_image VARCHAR(50) NOT NULL,
+            clan_desc VARCHAR(50) NOT NULL,
+            clan_diamonds BIGINT NOT NULL DEFAULT 0
+        )`);
+
+        await sql.query(`CREATE TABLE IF NOT EXISTS clans_players (
+            owner_id BIGINT NOT NULL,
+            invited_id BIGINT NOT NULL,
+            accepted BOOLEAN NOT NULL DEFAULT false,
+            invited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )`);
     } catch (err) {
         throw new Error(`Failed to create tables: ${err}`);
     }
