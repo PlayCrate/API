@@ -228,7 +228,6 @@ router.post('/mailbox', middleWare, async (req, res) => {
                 petObj.enchanted = pet.petenchanted;
             }
 
-            console.log(pet);
             return petObj;
         });
 
