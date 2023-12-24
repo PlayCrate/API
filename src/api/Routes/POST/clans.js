@@ -456,10 +456,20 @@ router.post('/clans', middleWare, async (req, res) => {
         }
 
         try {
+            // CHECK OWNER
+            const getClanOwner = await sql.query(`SELECT * FROM clans WHERE owner_id = $1`, [robloxId]);
+            if (getClanOwner.rowCount <= 0) {
+                return res.json({
+                    success: false,
+                    error: 'no rows returned',
+                });
+            }
+
             const getClan = await sql.query(
                 `SELECT owner_id FROM clans_players WHERE invited_id = $1 AND accepted = true`,
                 [robloxId]
             );
+
             if (getClan.rowCount <= 0) {
                 return res.json({
                     success: false,
