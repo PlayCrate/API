@@ -457,28 +457,27 @@ router.post('/clans', middleWare, async (req, res) => {
 
         try {
             // CHECK OWNER
-            const getClanOwner = await sql.query(`SELECT * FROM clans WHERE owner_id = $1`, [robloxId]);
-            if (getClanOwner.rowCount <= 0) {
-                return res.json({
-                    success: false,
-                    error: 'no rows returned',
-                });
-            }
-
-            const getClan = await sql.query(
-                `SELECT owner_id FROM clans_players WHERE invited_id = $1 AND accepted = true`,
-                [robloxId]
-            );
-
-            if (getClan.rowCount <= 0) {
-                return res.json({
-                    success: false,
-                    error: 'not in a clan.',
-                });
-            }
-
-            const ownerId = Number(getClan.rows[0].owner_id);
+            let ownerId;
             const donateAmount = Number(diamonds);
+
+            const getClanOwner = await sql.query(`SELECT owner_id FROM clans WHERE owner_id = $1`, [robloxId]);
+            if (getClanOwner.rowCount <= 0) {
+                const getClan = await sql.query(
+                    `SELECT owner_id FROM clans_players WHERE invited_id = $1 AND accepted = true`,
+                    [robloxId]
+                );
+
+                if (getClan.rowCount <= 0) {
+                    return res.json({
+                        success: false,
+                        error: 'not in a clan.',
+                    });
+                } else {
+                    ownerId = Number(getClan[0].rows.owner_id);
+                }
+            } else {
+                ownerId = Number(getClanOwner[0].rows.owner_id);
+            }
 
             const donateClan = await sql.query(
                 `UPDATE clans SET clan_diamonds = clan_diamonds + $1 WHERE owner_id = $2`,
