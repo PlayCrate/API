@@ -473,10 +473,10 @@ router.post('/clans', middleWare, async (req, res) => {
                         error: 'not in a clan.',
                     });
                 } else {
-                    ownerId = Number(getClan[0].rows.owner_id);
+                    ownerId = Number(getClan.rows[0].owner_id);
                 }
             } else {
-                ownerId = Number(getClanOwner[0].rows.owner_id);
+                ownerId = Number(getClanOwner.rows[0].owner_id);
             }
 
             const donateClan = await sql.query(
