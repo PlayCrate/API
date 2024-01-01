@@ -7,6 +7,7 @@ const limiteds = [
     { petId: 672, limit: 100 },
     { petId: 721, limit: 100 },
     { petId: 896, limit: 50 },
+    { petId: 590, limit: 50 },
 ];
 const payloads = ['PURCHASE_LIMITED', 'READ_LIMITED'];
 
